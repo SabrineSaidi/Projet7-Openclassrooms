@@ -24,7 +24,7 @@ from modules_api.data_api import *
 
 
 sample_size = 10000
-data ,data_complete,y_pred_test_export,train_set,test_set,bureau,bureau_balance,cash_balance,card_balance,prev_app,payments = load_all_data(sample_size)
+data ,y_pred_test_export,train_set, = load_all_data(sample_size)
 
 
 ### Data
@@ -306,11 +306,11 @@ def show_client_prediction():
             st.info('Probabilité de solvabilité du client : '+str(100*y_proba[0][0])+' %')
             st.info("Notez que 100% => Client non slovable ")
 
-            if(y_pred==0):
+            if(y_proba[0][0]<seuil_risque):
                 st.success('Client prédit comme solvable')
-            if(y_pred==1):
+            if(y_proba[0][0]>=seuil_risque):
                 st.error('Client prédit comme non solvable !')
-    
+
     if selected_choice == 'Nouveau client':   
         filename = file_selector()
         st.write('Fichier du nouveau client selectionné `%s`' % filename)
@@ -320,10 +320,10 @@ def show_client_prediction():
             y_pred,y_proba = predict_client("randomForest",nouveau_client)
             st.info('Probabilité de solvabilité du client : '+str(100*y_proba[0][0])+' %')
             st.info("Notez que 100% => Client non slovable ")
-            st.write(y_pred)
-            if(y_proba<seuil_risque):
+            
+            if(y_proba[0][0]<seuil_risque):
                 st.success('Client prédit comme solvable')
-            if(y_proba>=seuil_risque):
+            if(y_proba[0][0]>=seuil_risque):
                 st.error('Client prédit comme non solvable !')
 
 
@@ -354,8 +354,7 @@ if sidebar_selection == 'Model & Prediction':
                                     ( 'Prediction','Model'))
 
 if sidebar_selection == 'Prédire solvabilité client':
-    show_client_prediction()
-    selected_item=""
+    selected_item="predire_client"
 
 seuil_risque = st.sidebar.slider("Seuil de Solvabilité", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
 
@@ -390,3 +389,6 @@ if selected_item == 'Prediction':
 
 if selected_item == 'Model':
     show_model_analysis()
+
+if selected_item == 'predire_client':
+    show_client_prediction()
