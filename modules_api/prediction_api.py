@@ -22,7 +22,7 @@ def load_model(model_to_load):
     if model_to_load == "randomForest":
         model = pickle.load(open("modules_api/classifier_rf_model.sav", 'rb'))
     elif model_to_load == "lgbm":
-        pickle.load(open("modules_api/classifier_lgbm_model.sav", 'rb'))
+        model = pickle.load(open("modules_api/classifier_lgbm_model.sav", 'rb'))
     else:
         print("modèle non connu ! Merci de chois : lgbm ou randomForest")
     
@@ -49,5 +49,4 @@ def predict_client_par_ID(model_to_use,id_client):
     y_pred = model.predict(client_preproceced)
     y_proba = model.predict_proba(client_preproceced)
     return y_pred,y_proba
-
 
