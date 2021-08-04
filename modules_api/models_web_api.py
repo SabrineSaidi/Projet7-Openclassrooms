@@ -30,6 +30,36 @@ def predict():
         print ('Problem loading the model')
         return ('No model here to use')
 
+@app.route('/predictByClientId', methods=['POST'])
+def predictByClientId():
+    if randomForest:
+        try:
+            json_ = request.json
+            print(json_)
+            sample_size = 10000
+            
+            print(json_)  
+
+            sample_size= 20000
+            data_set = data = pd.read_csv("df_final.csv",nrows=sample_size)
+            client=data_set[data_set['SK_ID_CURR']==json_['SK_ID_CURR']].drop(['SK_ID_CURR','TARGET'],axis=1)
+            print(client)
+ 
+
+            preproc = pickle.load(open("preprocessor.sav", 'rb'))
+            X_transformed =preproc.transform(client)
+            y_pred = randomForest.predict(X_transformed)
+            y_proba = randomForest.predict_proba(X_transformed)
+            
+            return jsonify({'prediction': str(y_pred[0]),'prediction_proba':str(y_proba[0][0])})
+
+
+        except:
+
+            return jsonify({'trace': traceback.format_exc()})
+    else:
+        print ('Problem loading the model')
+        return ('No model here to use')
 
 if __name__ == '__main__':
     try:
