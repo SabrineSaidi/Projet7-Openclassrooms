@@ -80,8 +80,8 @@ def education_type():
 
     st.plotly_chart(fig)
 
-    ed_solvable = train_set[train_set['TARGET']==1].groupby('NAME_EDUCATION_TYPE').NAME_EDUCATION_TYPE.count()
-    ed_non_solvable = train_set[train_set['TARGET']==0].groupby('NAME_EDUCATION_TYPE').NAME_EDUCATION_TYPE.count()
+    ed_solvable = train_set[train_set['TARGET']==0].groupby('NAME_EDUCATION_TYPE').NAME_EDUCATION_TYPE.count()
+    ed_non_solvable = train_set[train_set['TARGET']==1].groupby('NAME_EDUCATION_TYPE').NAME_EDUCATION_TYPE.count()
     u_ed = train_set.NAME_EDUCATION_TYPE.unique() 
     #fig = plt.bar(u_ed, ed, bottom=None, color='blue', label='Education')
     #st.plotly_chart(fig)
@@ -108,8 +108,8 @@ def statut_plot ():
 
     st.plotly_chart(fig)
 
-    ed_solvable = train_set[train_set['TARGET']==1].groupby('NAME_FAMILY_STATUS').NAME_FAMILY_STATUS.count()
-    ed_non_solvable = train_set[train_set['TARGET']==0].groupby('NAME_FAMILY_STATUS').NAME_FAMILY_STATUS.count()
+    ed_solvable = train_set[train_set['TARGET']==0].groupby('NAME_FAMILY_STATUS').NAME_FAMILY_STATUS.count()
+    ed_non_solvable = train_set[train_set['TARGET']==1].groupby('NAME_FAMILY_STATUS').NAME_FAMILY_STATUS.count()
     u_ed = train_set.NAME_FAMILY_STATUS.unique() 
     #fig = plt.bar(u_ed, ed, bottom=None, color='blue', label='Education')
     #st.plotly_chart(fig)
@@ -138,8 +138,8 @@ def income_type ():
 
     st.plotly_chart(fig)
 
-    ed_solvable = train_set[train_set['TARGET']==1].groupby('NAME_INCOME_TYPE').NAME_INCOME_TYPE.count()
-    ed_non_solvable = train_set[train_set['TARGET']==0].groupby('NAME_INCOME_TYPE').NAME_INCOME_TYPE.count()
+    ed_solvable = train_set[train_set['TARGET']==0].groupby('NAME_INCOME_TYPE').NAME_INCOME_TYPE.count()
+    ed_non_solvable = train_set[train_set['TARGET']==1].groupby('NAME_INCOME_TYPE').NAME_INCOME_TYPE.count()
     u_ed = train_set.NAME_INCOME_TYPE.unique() 
     #fig = plt.bar(u_ed, ed, bottom=None, color='blue', label='Education')
     #st.plotly_chart(fig)
@@ -201,8 +201,8 @@ def show_client_predection():
         
         #st.header('ID :'+str(client['SK_ID_CURR'][0]))
         #st.write(data['age_bins'].value_counts())
-
-        st.info('Prediction du client : '+str(int(100*client['pred_prob'].values[0]))+' %')
+        y_pred,y_proba = predict_client_par_ID("randomForest",client_id)
+        st.info('Prediction du client : '+str(int(100*y_proba[0][0]))+' %')
         client_prediction= st.progress(0)
         for percent_complete in range(int(100*client['pred_prob'].values[0])):
             time.sleep(0.01)
