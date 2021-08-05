@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    randomForest = pickle.load(open("classifier_rf_model.sav", 'rb'))
     if randomForest:
         try:
             json_ = request.json
@@ -32,6 +33,7 @@ def predict():
 
 @app.route('/predictByClientId', methods=['POST'])
 def predictByClientId():
+    randomForest = pickle.load(open("classifier_rf_model.sav", 'rb'))
     if randomForest:
         try:
             json_ = request.json
@@ -45,7 +47,7 @@ def predictByClientId():
             client=data_set[data_set['SK_ID_CURR']==json_['SK_ID_CURR']].drop(['SK_ID_CURR','TARGET'],axis=1)
             print(client)
  
-
+            
             preproc = pickle.load(open("preprocessor.sav", 'rb'))
             X_transformed =preproc.transform(client)
             y_pred = randomForest.predict(X_transformed)
@@ -67,7 +69,5 @@ if __name__ == '__main__':
     except:
         port = 12345 # If you don't provide any port the port will be set to 12345
 
-    randomForest = pickle.load(open("classifier_rf_model.sav", 'rb'))
-    print ('Models loaded')
 
     app.run(port=port, debug=True)
